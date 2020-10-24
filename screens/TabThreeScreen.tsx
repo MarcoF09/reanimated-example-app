@@ -1,33 +1,48 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
-import { Text, View } from "../components/Themed";
+import { StyleSheet, Text, View, Button } from "react-native";
+import Animated, { Easing } from "react-native-reanimated";
 
-export default function TabThreeScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Three</Text>
-      <View
-        style={styles.separator}
-        lightColor="#eee"
-        darkColor="rgba(255,255,255,0.1)"
-      />
-    </View>
-  );
+const { Value, timing } = Animated;
+
+export default class TabThreeScreen extends React.Component {
+  constructor(props) {
+    super(props);
+    this._transX = new Value(0);
+    this._config = {
+      duration: 5000,
+      toValue: 180,
+      easing: Easing.inOut(Easing.ease),
+    };
+    this._anim = timing(this._transX, this._config);
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+        <Animated.View
+          style={[styles.box, { transform: [{ translateX: this._transX }] }]}
+        />
+        <Button
+          onPress={() => {
+            this._anim.start();
+          }}
+          title="Start"
+        />
+      </View>
+    );
+  }
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#ecf0f1",
+    padding: 8,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
+  box: {
+    width: 50,
+    height: 50,
+    backgroundColor: "purple",
+    borderRadius: 5,
   },
 });
